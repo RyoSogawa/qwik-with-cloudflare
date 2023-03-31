@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik';
+import { routeLoader$ } from '@builder.io/qwik-city';
 import type { DocumentHead } from '@builder.io/qwik-city';
 
 import Counter from '~/components/starter/counter/counter';
@@ -6,7 +7,24 @@ import Hero from '~/components/starter/hero/hero';
 import Infobox from '~/components/starter/infobox/infobox';
 import Starter from '~/components/starter/next-steps/next-steps';
 
+import type { KVNamespace } from '@cloudflare/workers-types';
+
+export const useGetServerTime = routeLoader$(({ platform }) => {
+  // the type `KVNamespace` comes from the @cloudflare/workers-types package
+  const { QWIK_TEST } = (platform as { QWIK_TEST: KVNamespace });
+
+  console.log('QWIK_TEST', QWIK_TEST);
+
+  return {
+    QWIK_TEST
+  }
+});
+
 export default component$(() => {
+  const kv = useGetServerTime();
+
+  console.log(kv);
+
   return (
     <>
       <Hero />
